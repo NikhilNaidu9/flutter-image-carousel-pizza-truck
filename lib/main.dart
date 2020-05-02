@@ -22,7 +22,11 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
+  AnimationController animationController;
+  Animation animation;
+
   int photoIndex = 0;
 
   List<String> photos = [
@@ -31,6 +35,28 @@ class _MyHomePageState extends State<MyHomePage> {
     'assets/pizza3.jpeg',
     'assets/pizza4.jpeg',
   ];
+
+  @override
+  void initState() {
+    animationController =
+        new AnimationController(vsync: this, duration: Duration(seconds: 18));
+
+    animation =
+        IntTween(begin: 0, end: photos.length - 1).animate(animationController)
+          ..addListener(() {
+            setState(() {
+              photoIndex = animation.value;
+            });
+          });
+
+    animationController.repeat();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
 
   void _previousImage() {
     setState(() {
@@ -181,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
+                            fontSize: 14.0),
                       ),
                     ],
                   ),
@@ -202,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
+                            fontSize: 14.0),
                       ),
                     ],
                   ),
